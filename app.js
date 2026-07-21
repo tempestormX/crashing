@@ -48,6 +48,21 @@ async function scheduleDeviceNudge(minutes) {
   return permission === 'granted' ? 'Device notification scheduled. Keep this browser available for the reminder.' : 'Notification permission was not granted, so Equilibrium will show an in-app reminder if it remains open.';
 }
 
+async function sendTestDeviceNudge() {
+  const message = 'This is a student-initiated test nudge. When it helps, choose one small reset.';
+  if (!('Notification' in window)) {
+    showToast(message);
+    return 'This browser cannot show system notifications, so the test nudge is shown in Equilibrium instead.';
+  }
+  const permission = Notification.permission === 'default' ? await Notification.requestPermission() : Notification.permission;
+  if (permission !== 'granted') {
+    showToast(message);
+    return 'Notification permission is off, so the test nudge is shown in Equilibrium instead.';
+  }
+  new Notification('Equilibrium · test nudge', { body: message, tag: 'equilibrium-test-nudge' });
+  return 'Test notification delivered to this device. This was requested by you, not triggered by a stress score.';
+}
+
 function median(values) {
   const sorted = [...values].sort((a, b) => a - b);
   const middle = Math.floor(sorted.length / 2);
@@ -254,7 +269,7 @@ function resetModal() {
       <button data-minutes="25"><b>In 25 minutes</b><small>One more focused sprint first.</small></button>
       <button data-minutes="45"><b>In 45 minutes</b><small>Keep a longer block, with a safety rail.</small></button>
     </div>
-    <div class="modal-actions"><button class="primary-button" id="confirmReset">Schedule a gentle nudge <span>→</span></button><button class="secondary-button" id="cancelReset">Maybe later</button></div>
+    <div class="modal-actions"><button class="primary-button" id="confirmReset">Schedule a gentle nudge <span>→</span></button><button class="secondary-button" id="sendTestNudge">Send a test notification now</button><button class="secondary-button" id="cancelReset">Maybe later</button></div>
   `);
   document.querySelectorAll('#durationChoices button').forEach(button => button.addEventListener('click', () => {
     selectedDuration = Number(button.dataset.minutes);
@@ -264,6 +279,17 @@ function resetModal() {
     closeModal();
     const result = await scheduleDeviceNudge(selectedDuration);
     showToast(result);
+  });
+  document.querySelector('#sendTestNudge').addEventListener('click', async () => {
+    const testButton = document.querySelector('#sendTestNudge');
+    testButton.disabled = true;
+    try {
+      const result = await sendTestDeviceNudge();
+      closeModal();
+      showToast(result);
+    } catch (_) {
+      showToast('The test notification could not be displayed. You can still use Equilibrium’s in-app reminder.');
+    }
   });
   document.querySelector('#cancelReset').addEventListener('click', closeModal);
 }
@@ -450,6 +476,11 @@ function reflectionResultModal(answer) {
   openModal('<p class="eyebrow">PRIVATE REFLECTION</p><h2>A calmer way forward.</h2><div class="data-empty" id="reflectionAnswer"></div><div class="modal-actions"><button class="primary-button" id="reflectionDone">Keep this private</button></div>');
   document.querySelector('#reflectionAnswer').textContent = answer;
   document.querySelector('#reflectionDone').addEventListener('click', closeModal);
+}
+
+function reflectionUnavailableModal() {
+  openModal('<p class="eyebrow">PRIVATE REFLECTION</p><h2>Live assistant unavailable in this demo.</h2><div class="data-empty"><p>This deployment does not have funded OpenAI API access, so it cannot produce a live reflection response.</p><p>Your writing was not stored by Equilibrium. The consent boundary remains the same: a reflection is only sent after you choose to share it with the assistant.</p></div><div class="modal-actions"><button class="primary-button" id="reflectionUnavailableDone">Return to reflection</button></div>');
+  document.querySelector('#reflectionUnavailableDone').addEventListener('click', closeModal);
 }
 
 const FIREBASE_WEB_SDK_VERSION = '12.1.0';
@@ -715,7 +746,13 @@ function init() {
       const result = await apiRequest('/api/reflection', { method: 'POST', body: JSON.stringify({ text, lens: selectedLens, shareWithAssistant: true }) });
       status.textContent = 'Response ready. Your writing was not stored by Equilibrium.';
       reflectionResultModal(result.reflection);
-    } catch (error) { status.textContent = error.message; }
+    } catch (error) {
+      const message = error.message || 'The reflection assistant is unavailable right now.';
+      if (/assistant|configured|quota|billing|payment|unavailable|network/i.test(message)) {
+        status.textContent = 'Live assistant unavailable in this demo. Your writing was not saved by Equilibrium.';
+        reflectionUnavailableModal();
+      } else status.textContent = message;
+    }
   });
   document.querySelector('#communityText').addEventListener('input', event => { document.querySelector('#communityCount').textContent = `${event.target.value.length} / 500`; });
   document.querySelector('#communityForm').addEventListener('submit', async event => {
