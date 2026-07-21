@@ -6,3 +6,33 @@ database/equilibrium.db
 __pycache__/
 *.pyc
 secrets/
+
+# OS and editor files
+.DS_Store
+*.swp
+
+# Local demo-production artifacts. Keep these locally for Devpost, but do not
+# add generated recordings, captures, or media exports to the source repo.
+demo_capture_clips/
+demo_capture_raw/
+live_capture_frames/
+submission_images/
+video_demo/
+final_video/
+video_demo_product_*.png
+
+# One-off recording and capture notes/scripts used to produce the submission
+# media, not to run Equilibrium itself.
+CAPTURE_ASSETS.md
+CONFIGURATION_TESTING.md
+DEMO_EVIDENCE_REVIEW.md
+FINAL_VIDEO_SCRIPT.md
+UPDATED_3_MINUTE_DEMO_PLAN.md
+VIDEO_DEMO_SCRIPT.md
+VOICEOVER_TIMELINE.md
+assemble_live_demo.py
+assemble_voiceover_video.py
+build_audio_matched_review.py
+build_script_review_video.py
+create_capture_assets.py
+create_video_demo.py
