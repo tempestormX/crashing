@@ -497,23 +497,17 @@ async function enableFcmReminders() {
   const permission = Notification.permission === 'default' ? await Notification.requestPermission() : Notification.permission;
   if (permission !== 'granted') throw new Error('Notifications remain off because browser permission was not granted.');
   const config = await apiRequest('/api/integrations/firebase-config');
-  await apiRequest('/api/integrations/notifications/preference', { method: 'POST', body: JSON.stringify({ enabled: true, quietStart: null, quietEnd: null }) });
   const [firebaseApp, firebaseMessagingModule] = await Promise.all([
     import(`https://www.gstatic.com/firebasejs/${FIREBASE_WEB_SDK_VERSION}/firebase-app.js`),
     import(`https://www.gstatic.com/firebasejs/${FIREBASE_WEB_SDK_VERSION}/firebase-messaging.js`)
   ]);
   const app = firebaseApp.getApps().length ? firebaseApp.getApp() : firebaseApp.initializeApp(config);
   firebaseMessaging = firebaseMessagingModule.getMessaging(app);
-  firebaseMessagingModule.onRegistered(firebaseMessaging, async installationId => {
-    try {
-      await apiRequest('/api/integrations/fcm/registrations', { method: 'POST', body: JSON.stringify({ installationId, pushConsent: true }) });
-      showToast('This device is registered for the reminders you choose.');
-    } catch (_) {
-      showToast('Your browser is enabled, but Equilibrium could not save this device registration.');
-    }
-  });
   const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js', { type: 'module' });
-  await firebaseMessagingModule.register(firebaseMessaging, { vapidKey: config.vapidKey, serviceWorkerRegistration: registration });
+  const registrationToken = await firebaseMessagingModule.getToken(firebaseMessaging, { vapidKey: config.vapidKey, serviceWorkerRegistration: registration });
+  if (!registrationToken) throw new Error('Firebase did not return a device registration token.');
+  await apiRequest('/api/integrations/fcm/registrations', { method: 'POST', body: JSON.stringify({ registrationToken, pushConsent: true }) });
+  await apiRequest('/api/integrations/notifications/preference', { method: 'POST', body: JSON.stringify({ enabled: true, quietStart: null, quietEnd: null, timezoneOffsetMinutes: new Date().getTimezoneOffset() }) });
 }
 
 function deviceReminderSettingsModal() {
@@ -525,9 +519,9 @@ function deviceReminderSettingsModal() {
   document.querySelector('#saveQuietHours').addEventListener('click', async () => {
     const { toggle } = deviceReminderControls();
     try {
-      await apiRequest('/api/integrations/notifications/preference', {
-        method: 'POST',
-        body: JSON.stringify({ enabled: toggle.checked, quietStart: document.querySelector('#quietStart').value || null, quietEnd: document.querySelector('#quietEnd').value || null })
+        await apiRequest('/api/integrations/notifications/preference', {
+          method: 'POST',
+          body: JSON.stringify({ enabled: toggle.checked, quietStart: document.querySelector('#quietStart').value || null, quietEnd: document.querySelector('#quietEnd').value || null, timezoneOffsetMinutes: new Date().getTimezoneOffset() })
       });
       closeModal();
       showToast('Quiet hours saved. You can change them anytime.');
@@ -674,7 +668,7 @@ function init() {
     const toggle = event.target;
     if (!toggle.checked) {
       try {
-        await apiRequest('/api/integrations/notifications/preference', { method: 'POST', body: JSON.stringify({ enabled: false, quietStart: null, quietEnd: null }) });
+        await apiRequest('/api/integrations/notifications/preference', { method: 'POST', body: JSON.stringify({ enabled: false, quietStart: null, quietEnd: null, timezoneOffsetMinutes: new Date().getTimezoneOffset() }) });
         showToast('Background device reminders are off for this account.');
       } catch (error) {
         toggle.checked = true;
@@ -689,7 +683,7 @@ function init() {
       showToast('Background reminders are enabled. Set quiet hours if you want them.');
     } catch (error) {
       toggle.checked = false;
-      try { await apiRequest('/api/integrations/notifications/preference', { method: 'POST', body: JSON.stringify({ enabled: false, quietStart: null, quietEnd: null }) }); } catch (_) { /* No preference was stored. */ }
+      try { await apiRequest('/api/integrations/notifications/preference', { method: 'POST', body: JSON.stringify({ enabled: false, quietStart: null, quietEnd: null, timezoneOffsetMinutes: new Date().getTimezoneOffset() }) }); } catch (_) { /* No preference was stored. */ }
       showToast(error.message);
     } finally {
       refreshDeviceReminderControls();

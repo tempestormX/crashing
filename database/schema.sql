@@ -5,6 +5,9 @@ CREATE TABLE IF NOT EXISTS accounts (
   email TEXT NOT NULL COLLATE NOCASE UNIQUE,
   display_name TEXT NOT NULL,
   password_hash TEXT NOT NULL,
+  -- Present only after an explicit, user-initiated Supabase Auth migration.
+  -- Local authentication remains the default while this is NULL.
+  supabase_user_id TEXT UNIQUE,
   created_at TEXT NOT NULL,
   disabled_at TEXT
 );
@@ -78,6 +81,7 @@ CREATE TABLE IF NOT EXISTS notification_preferences (
   fcm_enabled INTEGER NOT NULL DEFAULT 0 CHECK (fcm_enabled IN (0, 1)),
   quiet_start TEXT,
   quiet_end TEXT,
+  timezone_offset_minutes INTEGER,
   updated_at TEXT NOT NULL
 );
 
@@ -90,7 +94,56 @@ CREATE TABLE IF NOT EXISTS fcm_device_registrations (
   updated_at TEXT NOT NULL
 );
 
+-- A durable, local-first ledger. A background job may send only rows that
+-- were created by a student-approved action and that are due for delivery.
+CREATE TABLE IF NOT EXISTS notification_send_ledger (
+  id TEXT PRIMARY KEY,
+  account_id TEXT NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
+  registration_id_hash TEXT NOT NULL REFERENCES fcm_device_registrations(installation_id_hash) ON DELETE CASCADE,
+  request_id TEXT NOT NULL UNIQUE,
+  title TEXT NOT NULL,
+  body TEXT NOT NULL,
+  scheduled_for TEXT NOT NULL,
+  status TEXT NOT NULL CHECK (status IN ('pending', 'sent', 'skipped_quiet_hours', 'failed', 'cancelled')) DEFAULT 'pending',
+  attempted_at TEXT,
+  provider_message_id TEXT,
+  error_code TEXT,
+  created_at TEXT NOT NULL
+);
+
+-- Proposals contain only the information the student explicitly chose to
+-- send. They are never generated from cadence, scrolling or model scores.
+CREATE TABLE IF NOT EXISTS external_action_proposals (
+  id TEXT PRIMARY KEY,
+  account_id TEXT NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
+  action TEXT NOT NULL CHECK (action IN ('notification', 'counsellor_referral', 'summary_share')),
+  destination TEXT NOT NULL,
+  payload_json TEXT NOT NULL,
+  status TEXT NOT NULL CHECK (status IN ('pending_approval', 'approved', 'rejected', 'completed', 'failed')) DEFAULT 'pending_approval',
+  created_at TEXT NOT NULL,
+  decided_at TEXT,
+  completed_at TEXT,
+  result_json TEXT
+);
+
+-- Local records are queued only. They are sent to Supabase only after both
+-- the adapter flag and an explicit per-user sync request are enabled.
+CREATE TABLE IF NOT EXISTS supabase_sync_outbox (
+  id TEXT PRIMARY KEY,
+  account_id TEXT NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
+  event_type TEXT NOT NULL CHECK (event_type IN ('consent', 'trial', 'notification_preference', 'fcm_registration', 'deletion')),
+  payload_json TEXT NOT NULL,
+  status TEXT NOT NULL CHECK (status IN ('pending', 'synced', 'blocked', 'failed')) DEFAULT 'pending',
+  attempts INTEGER NOT NULL DEFAULT 0,
+  last_error TEXT,
+  created_at TEXT NOT NULL,
+  synced_at TEXT
+);
+
 CREATE INDEX IF NOT EXISTS idx_trials_account_time ON cadence_trials(account_id, stored_at DESC);
 CREATE INDEX IF NOT EXISTS idx_consents_account_time ON consent_events(account_id, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_community_posts_status_time ON community_posts(status, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_fcm_registrations_account ON fcm_device_registrations(account_id);
+CREATE INDEX IF NOT EXISTS idx_notification_send_due ON notification_send_ledger(status, scheduled_for);
+CREATE INDEX IF NOT EXISTS idx_external_actions_account ON external_action_proposals(account_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_supabase_outbox_account ON supabase_sync_outbox(account_id, status, created_at);

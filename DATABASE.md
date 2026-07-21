@@ -16,7 +16,8 @@ Open `http://127.0.0.1:8000`. The server creates `database/equilibrium.db` and a
 - aggregate cadence trials: count, median timing, variability, correction count and long-pause count;
 - optional student-labelled check-ins.
 - anonymous community notes, their topic, and safety reports (never a public profile or email address).
-- opt-in background-reminder preferences and encrypted Firebase device registration IDs, only after secure FCM configuration.
+- opt-in background-reminder preferences, local time-zone offset, encrypted Firebase registration tokens, and an approved-send ledger, only after secure FCM configuration.
+- disabled-by-default Supabase sync outbox and approval-gated external-action proposals. Neither makes a network call without its explicit deployment flag and student confirmation.
 
 It rejects text, raw key events, URLs, scrolling histories, screenshots and individual stress predictions. Data is isolated by account ID and the API requires a current `cloud_trial_summaries` consent before a trial or check-in can be saved. `DELETE /api/me/data` removes that account’s cloud trials, check-ins, and community posts/reports, then records withdrawal of consent.
 
@@ -35,7 +36,12 @@ It rejects text, raw key events, URLs, scrolling histories, screenshots and indi
 | GET | `/api/integrations/status` | Signed-in, secret-free readiness report for the optional provider, FCM, Supabase, and LangGraph integrations. |
 | GET | `/api/integrations/firebase-config` | Return Firebase’s public web identifiers only when FCM is configured. |
 | GET/POST | `/api/integrations/notifications/preference` | Read or change a student’s opt-in FCM preference and quiet hours. |
-| POST | `/api/integrations/fcm/registrations` | Store one explicitly consented Firebase Installation ID, encrypted at rest. |
+| POST | `/api/integrations/fcm/registrations` | Store one explicitly consented Firebase registration token, encrypted at rest. |
+| POST | `/api/auth/migrate-to-supabase` | Student-initiated one-way account link after Supabase Auth is explicitly enabled. |
+| POST | `/api/integrations/supabase/sync` | Explicitly flush the signed-in student’s allowed aggregate outbox after consent and account linking. |
+| GET/POST | `/api/actions/proposals` | List or create an exact external action for later student approval; disabled by default. |
+| POST | `/api/actions/{id}/decision` | Approve or reject one proposed action through the LangGraph gate. |
+| POST | `/api/integrations/fcm/process-due` | Job-secret-protected scheduled FCM processor; disabled by default. |
 | DELETE | `/api/me/data` | Remove the signed-in student’s stored trials and check-ins. |
 
 ## Reflection assistant setup

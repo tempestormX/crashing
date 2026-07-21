@@ -1,3 +1,4 @@
-# Install only when activating encrypted FCM device registrations or LangGraph.
+# Install only when activating the corresponding reviewed integration.
 cryptography
 langgraph
+google-auth
