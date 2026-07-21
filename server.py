@@ -25,6 +25,23 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parent
+
+
+def load_local_env(path: Path) -> None:
+    """Load a gitignored local .env without replacing deployment secrets."""
+    if not path.is_file():
+        return
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        key, value = key.strip(), value.strip()
+        if key and key.replace("_", "").isalnum():
+            os.environ.setdefault(key, value.removeprefix('"').removesuffix('"').removeprefix("'").removesuffix("'"))
+
+
+load_local_env(ROOT / ".env")
 DATABASE_DIR = ROOT / "database"
 DATABASE_PATH = DATABASE_DIR / "equilibrium.db"
 SCHEMA_PATH = DATABASE_DIR / "schema.sql"
@@ -230,7 +247,8 @@ def initialise_database() -> None:
         # SQLite's CREATE TABLE IF NOT EXISTS does not add new columns.
         account_columns = {row["name"] for row in database.execute("PRAGMA table_info(accounts)")}
         if "supabase_user_id" not in account_columns:
-            database.execute("ALTER TABLE accounts ADD COLUMN supabase_user_id TEXT UNIQUE")
+            database.execute("ALTER TABLE accounts ADD COLUMN supabase_user_id TEXT")
+        database.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_accounts_supabase_user ON accounts(supabase_user_id)")
         preference_columns = {row["name"] for row in database.execute("PRAGMA table_info(notification_preferences)")}
         if "timezone_offset_minutes" not in preference_columns:
             database.execute("ALTER TABLE notification_preferences ADD COLUMN timezone_offset_minutes INTEGER")
@@ -678,6 +696,16 @@ class EquilibriumHandler(SimpleHTTPRequestHandler):
         email = str(payload.get("email", "")).strip().lower()
         password = str(payload.get("password", ""))
         if supabase_auth_enabled():
+            # Preserve access to an existing local account long enough for the
+            # student to complete the explicit one-way migration. Once linked,
+            # this fallback is no longer available for that account.
+            with connect() as database:
+                pending_account = database.execute("SELECT * FROM accounts WHERE email = ? AND supabase_user_id IS NULL AND disabled_at IS NULL", (email,)).fetchone()
+                if pending_account and password_matches(password, pending_account["password_hash"]):
+                    token, expires = create_local_session(database, pending_account["id"])
+                    audit(database, pending_account["id"], "local_login_pending_supabase_migration")
+                    self.json_response({"token": token, "expiresAt": expires, "account": self.public_account(pending_account), "cloudTrialSummaries": current_consent(database, pending_account["id"]), "supabaseMigrationRequired": True})
+                    return
             result = supabase_auth("/auth/v1/token?grant_type=password", {"email": email, "password": password})
             remote_user = result.get("user") or {}
             remote_id = str(remote_user.get("id") or "")
