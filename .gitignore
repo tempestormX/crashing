@@ -1,0 +1,7 @@
+# Local credentials and runtime data
+.env
+.env.*
+openaikey
+database/equilibrium.db
+__pycache__/
+*.pyc

@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Equilibrium — a private capacity companion for students." />
+    <title>Equilibrium — Your capacity companion</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="platform.css" />
+    <link rel="stylesheet" href="ml.css" />
+    <link rel="stylesheet" href="login.css" />
+    <link rel="stylesheet" href="integrations.css" />
+  </head>
+  <body>
+    <section class="login-gate" id="loginGate" aria-labelledby="loginTitle">
+      <div class="login-story" aria-hidden="true">
+        <a class="login-brand" href="#"><span class="brand-mark"><i></i><i></i><i></i></span><span>equi<span>librium</span></span></a>
+        <div class="login-story-copy">
+          <p class="eyebrow">PRIVATE STUDENT SPACE</p>
+          <h2>Support that protects<br /><em>your momentum.</em></h2>
+          <p>A quiet place to understand your rhythm, choose a reset, and stay in control of your data.</p>
+        </div>
+        <div class="login-trust"><span>⌑</span><p><b>Your work stays yours.</b><br />Equilibrium never reads your words, files, tabs, or messages.</p></div>
+        <div class="login-orbit orbit-a"></div><div class="login-orbit orbit-b"></div>
+      </div>
+      <div class="login-panel-wrap">
+        <div class="login-panel">
+          <div class="login-panel-top"><span class="login-mobile-brand"><span class="brand-mark"><i></i><i></i><i></i></span> equilibrium</span><span class="account-created">ACCOUNT READY</span></div>
+          <div class="student-account"><span class="login-avatar">A</span><div><span>WELCOME BACK</span><h3>Anu's student account</h3><p>Week 8 · your private Equilibrium space</p></div><span class="verified-mark" title="Account verified">✓</span></div>
+          <div class="login-copy"><h1 id="loginTitle">Pick up where you left off.</h1><p>Your capacity view is ready when you are.</p></div>
+          <form id="loginForm" class="login-form">
+            <label for="studentEmail">Student email</label>
+            <div class="login-input"><span>✉</span><input id="studentEmail" name="email" type="email" value="anu@equilibrium.student" autocomplete="email" required /></div>
+            <div class="password-label"><label for="studentPassword">Password</label><button id="forgotPassword" type="button">Forgot password?</button></div>
+            <div class="login-input"><span>⌑</span><input id="studentPassword" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" required /><button id="passwordVisibility" type="button" aria-label="Show password">◉</button></div>
+            <label class="remember-row"><input id="rememberDevice" type="checkbox" checked /><span class="login-check"></span><span>Keep me signed in on this private device</span></label>
+            <button class="login-submit" type="submit">Continue as Anu <span>→</span></button>
+            <p class="login-feedback" id="loginFeedback" role="status" aria-live="polite"></p>
+          </form>
+          <p class="switch-account">Not Anu? <button id="differentAccount" type="button">Use a different student account</button></p>
+          <p class="login-help">Need support accessing your account? <button id="loginSupport" type="button">Get help</button></p>
+        </div>
+      </div>
+    </section>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="brand" href="#today" aria-label="Equilibrium home">
+          <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span>equi<span>librium</span></span>
+        </a>
+
+        <div class="profile-card">
+          <span class="avatar">A</span>
+          <div><b>Anu</b><small>Week 8 · steady</small></div>
+          <button class="more-button" type="button" aria-label="Account options">•••</button>
+        </div>
+
+        <nav aria-label="Main navigation">
+          <a class="nav-link active" data-view-link="today" href="#today"><span class="nav-icon">⌂</span> Today</a>
+          <a class="nav-link" data-view-link="focus" href="#rhythm"><span class="nav-icon">⌁</span> Focus</a>
+          <a class="nav-link" data-view-link="reflect" href="#reflect"><span class="nav-icon">◌</span> Reflect</a>
+          <a class="nav-link" data-view-link="community" href="#community"><span class="nav-icon">◍</span> Community</a>
+          <a class="nav-link" data-view-link="support" href="#support"><span class="nav-icon">♡</span> Support</a>
+          <a class="nav-link" data-view-link="privacy" href="#privacy"><span class="nav-icon">⌑</span> Privacy</a>
+          <button class="guide-link" id="guideButton" type="button"><span class="nav-icon">i</span> How it works</button>
+        </nav>
+
+        <div class="sidebar-privacy">
+          <span class="lock">⌑</span>
+          <p><b>Private by default</b><br />Your words and browsing stay yours.</p>
+          <a id="privacyShortcut" href="#privacy">See what we use <span>→</span></a>
+        </div>
+        <div class="sidebar-session">
+          <span>Signed in as Anu</span>
+          <button id="logoutButton" type="button"><span>↗</span> Log out</button>
+        </div>
+      </aside>
+
+      <main>
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">SUNDAY, 19 JULY</p>
+            <h1>Good afternoon, Anu.</h1>
+          </div>
+          <div class="top-actions">
+            <button class="signal-status" id="signalInfo" type="button"><span></span> Signals are private</button>
+            <button class="bell" type="button" id="notificationButton" aria-label="Notifications">♧<i></i></button>
+          </div>
+        </header>
+
+        <section id="today" class="page-section today-section" data-view="today">
+          <div class="welcome-grid">
+            <div class="welcome-copy">
+              <p class="eyebrow warm">YOUR CAPACITY, TODAY</p>
+              <h2>Keep your momentum.<br /><em>Lose the crash.</em></h2>
+              <p class="lede">Equilibrium notices small changes in how work is flowing, then offers a useful reset before a hard session becomes a hard day.</p>
+              <div class="micro-assurance"><span>✓</span> No journals required. No content read. Just patterns you choose to share.</div>
+            </div>
+
+            <article class="capacity-card">
+              <div class="capacity-top"><span>LIVE CAPACITY</span><button id="capacityInfo" type="button" aria-label="About capacity score">?</button></div>
+              <div class="capacity-main">
+                <div class="capacity-ring" aria-label="72 percent capacity"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="49"></circle><circle class="ring-value" cx="60" cy="60" r="49"></circle></svg><div><strong>72</strong><small>%</small></div></div>
+                <div class="capacity-summary"><span class="status-pill"><i></i> Sustainable pace</span><p>You're in a good working range. Protect it with one intentional pause.</p></div>
+              </div>
+              <div class="capacity-meta"><span><i class="mint-dot"></i> Within your usual range</span><span>Last updated 2 min ago</span></div>
+            </article>
+          </div>
+
+          <div class="signal-row" aria-label="Current work signals">
+            <article><span class="signal-icon amber">↯</span><div><small>Typing cadence</small><b id="typingStatus">Learning baseline</b><p id="typingNote">No text is read or stored</p></div><span class="trend up" id="typingTrend">↗</span></article>
+            <article><span class="signal-icon mint">⌁</span><div><small>Scrolling pattern</small><b id="scrollStatus">Waiting for activity</b><p id="scrollNote">Never used as a stress label</p></div><span class="trend stable" id="scrollTrend">—</span></article>
+            <article><span class="signal-icon lilac">◒</span><div><small>Recovery</small><b>Due soon</b><p>Last meaningful pause: 88 min</p></div><span class="trend down">↓</span></article>
+          </div>
+        </section>
+
+        <section id="rhythm" class="page-section rhythm-section" data-view="focus">
+          <div class="section-title">
+            <div><p class="eyebrow">FOCUS PLAN</p><h2>Plan work around your rhythm.</h2></div>
+            <div class="day-selector" role="group" aria-label="Day selection"><button>Fri</button><button>Sat</button><button class="selected">Today</button><button>Mon</button></div>
+          </div>
+          <div class="rhythm-grid">
+            <article class="panel rhythm-panel">
+              <div class="panel-heading"><div><h3>Capacity across your study day</h3><p>Built from the signals you allowed on this device.</p></div><button id="whyThis" class="quiet-button" type="button">Why this view?</button></div>
+              <div class="chart-wrap">
+                <div class="chart-labels"><span>100</span><span>75</span><span>50</span><span>25</span></div>
+                <svg class="rhythm-chart" viewBox="0 0 710 250" preserveAspectRatio="none" aria-label="Capacity is steady through the morning then gently decreases in the afternoon"><defs><linearGradient id="chartFill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#a9d9c2" stop-opacity=".5"/><stop offset="1" stop-color="#a9d9c2" stop-opacity="0"/></linearGradient></defs><g class="grid-lines"><line x1="0" y1="18" x2="710" y2="18"/><line x1="0" y1="78" x2="710" y2="78"/><line x1="0" y1="138" x2="710" y2="138"/><line x1="0" y1="198" x2="710" y2="198"/></g><path d="M0 88 C45 80, 65 63, 105 72 S165 94, 207 75 S270 33, 321 42 S375 81, 422 62 S493 38, 544 55 S592 105, 640 94 S685 107, 710 94 L710 250 L0 250Z" fill="url(#chartFill)"/><path d="M0 88 C45 80, 65 63, 105 72 S165 94, 207 75 S270 33, 321 42 S375 81, 422 62 S493 38, 544 55 S592 105, 640 94 S685 107, 710 94" fill="none" stroke="#3f8a70" stroke-width="4" stroke-linecap="round"/><line class="now-line" x1="532" y1="9" x2="532" y2="212"/><circle cx="532" cy="53" r="7" fill="#f8f6ef" stroke="#3f8a70" stroke-width="4"/></svg>
+                <div class="time-labels"><span>8 AM</span><span>10 AM</span><span>12 PM</span><span>2 PM</span><span>4 PM</span><span>6 PM</span></div>
+              </div>
+              <div class="chart-insight"><span class="spark">✦</span><p><b>Pattern note:</b> You often recover well from a short movement break around this time.</p><button class="text-button" data-action="plan">Plan one</button></div>
+            </article>
+
+            <article class="panel timing-card">
+              <p class="eyebrow warm">RIGHT-TIME NUDGE</p>
+              <div class="timing-orbit"><span class="orbit-dot one"></span><span class="orbit-dot two"></span><span class="orbit-dot three"></span><div class="timing-clock">18<small>min</small></div></div>
+              <h3>A reset will help more<br />in about 18 minutes.</h3>
+              <p>Your focus is still usable. A well-timed pause now protects the block ahead without breaking your flow.</p>
+              <button class="primary-button" id="scheduleReset" type="button">Schedule a gentle nudge <span>→</span></button>
+              <button class="understated-button" id="skipNudge" type="button">Not today</button>
+            </article>
+          </div>
+        </section>
+
+        <section id="toolkit" class="page-section toolkit-section" data-view="focus">
+          <div class="section-title">
+            <div><p class="eyebrow">RESET TOOLKIT</p><h2>Small moves. Real recovery.</h2></div>
+            <p class="section-lede">Pick what fits your energy, not an ideal version of your day.</p>
+          </div>
+          <div class="toolkit-grid">
+            <button class="tool-card selected-tool" data-tool="move" type="button"><span class="tool-icon move-icon">↗</span><span class="tool-time">5 MIN</span><h3>Step outside</h3><p>Change light, distance and posture.</p><span class="tool-arrow">→</span></button>
+            <button class="tool-card" data-tool="reset" type="button"><span class="tool-icon reset-icon">⌁</span><span class="tool-time">90 SEC</span><h3>Downshift</h3><p>Settle your nervous system, fast.</p><span class="tool-arrow">→</span></button>
+            <button class="tool-card" data-tool="sort" type="button"><span class="tool-icon sort-icon">≡</span><span class="tool-time">3 MIN</span><h3>Untangle it</h3><p>Turn the swarm into one next step.</p><span class="tool-arrow">→</span></button>
+            <button class="tool-card" data-tool="refuel" type="button"><span class="tool-icon refuel-icon">◐</span><span class="tool-time">10 MIN</span><h3>Refuel</h3><p>A snack and water count as strategy.</p><span class="tool-arrow">→</span></button>
+          </div>
+          <article class="tool-detail" id="toolDetail">
+            <div class="detail-art"><span>⌇</span><i></i><i></i><i></i></div>
+            <div><p class="eyebrow warm">START HERE · 5 MINUTES</p><h3>Step outside, no destination needed.</h3><p>Walk until you can spot three things further away than your screen. The aim isn't productivity; it's giving your attention a wider frame.</p></div>
+            <button class="primary-button" id="beginTool" type="button">Begin reset <span>→</span></button>
+          </article>
+        </section>
+
+        <section id="reflect" class="page-section unload-section" data-view="reflect">
+          <div class="unload-card">
+            <div class="unload-copy"><p class="eyebrow">PRIVATE AI REFLECTION</p><h2>Put it somewhere<br /><em>safe and useful.</em></h2><p>Choose a reflection lens and let the assistant turn a messy thought into one grounded next step, a boundary, or a support prompt. Your writing is never used to calculate capacity.</p><div class="anonymity-note"><span>⌑</span> Nothing leaves this device unless you explicitly send this reflection to the assistant.</div></div>
+            <form class="unload-form" id="unloadForm"><label for="unloadText">What's taking up too much space?</label><textarea id="unloadText" maxlength="1200" placeholder="I have three deadlines and I'm worried I won't finish any of them..."></textarea><div class="reflection-lenses" role="group" aria-label="Reflection lens"><button class="reflection-lens selected" data-lens="next_step" type="button">One next step</button><button class="reflection-lens" data-lens="boundary" type="button">A boundary</button><button class="reflection-lens" data-lens="perspective" type="button">Perspective</button></div><label class="ai-consent"><input id="reflectionConsent" type="checkbox" /><span>I choose to send this reflection to the AI assistant. It is not retained by Equilibrium.</span></label><div><span id="wordCount">0 / 1200</span><button class="primary-button light" type="submit">Ask reflection assistant <span>→</span></button></div><p class="reflection-status" id="reflectionStatus" role="status" aria-live="polite"></p></form>
+          </div>
+        </section>
+
+        <section id="privacy" class="page-section privacy-section" data-view="privacy">
+          <div class="section-title"><div><p class="eyebrow">YOUR DATA, YOUR CALL</p><h2>Privacy is a feature, not fine print.</h2></div><p class="section-lede">Equilibrium is intentionally built to see less. It reads patterns, never the contents of your work.</p></div>
+          <div class="privacy-grid">
+            <article class="privacy-promise"><span class="shield-mark">⌑</span><h3>What stays private</h3><ul><li><span>✓</span> What you type</li><li><span>✓</span> Websites, files and messages</li><li><span>✓</span> Your identity and academic records</li></ul><p>Capacity is calculated <b>on this device</b>. No raw behavioural data is sent to Equilibrium.</p></article>
+            <article class="privacy-controls panel"><div class="panel-heading"><div><h3>Signals you allow</h3><p>Fine-tune the inputs anytime.</p></div><span class="local-pill">ON DEVICE</span></div><div class="toggle-row"><div><b>Typing cadence</b><p>Timing, pauses and correction count - never text</p></div><label class="switch"><input id="typingToggle" type="checkbox" checked><span></span></label></div><div class="toggle-row"><div><b>Scrolling patterns</b><p>Direction and pace on this page only - never content</p></div><label class="switch"><input id="scrollToggle" type="checkbox" checked><span></span></label></div><div class="toggle-row"><div><b>Wearable recovery</b><p>Optional, disconnected right now</p></div><label class="switch"><input id="wearableToggle" type="checkbox"><span></span></label></div><div class="toggle-row device-reminder-row"><div><b>Background device reminders</b><p id="deviceReminderNote">Sign in to check whether secure notifications are available.</p><button id="deviceReminderSettings" class="quiet-button" type="button" disabled>Set quiet hours</button></div><label class="switch"><input id="deviceReminderToggle" type="checkbox" disabled><span></span></label></div><button class="manage-button" id="manageData" type="button">Manage or delete my local data <span>→</span></button></article>
+          </div>
+          <article class="interaction-readout panel"><div><p class="eyebrow">LIVE, ON-DEVICE SIGNAL CHECK</p><h3>Patterns need context.</h3><p>Equilibrium compares only anonymous timing aggregates with Anu’s own baseline. It offers a pause only after repeated, combined changes - and never from scrolling alone.</p></div><div class="readout-metrics"><div><span>Typing sample</span><b id="typingSample">0 timing events</b><small id="typingMetric">Learning a baseline</small></div><div><span>Scrolling sample</span><b id="scrollSample">0 movements</b><small id="scrollMetric">Waiting for activity</small></div></div><button id="resetInteractionData" class="quiet-button" type="button">Reset local interaction baseline</button></article>
+          <article class="baseline-trainer panel"><div class="trainer-intro"><p class="eyebrow">EXPERIMENTAL PERSONAL MODEL</p><h3>Teach the model your own context.</h3><p>Start with a visible typing trial, then label how the work felt. The LSTM learns short sequences of local cadence summaries - not your words - so it can distinguish your usual patterns from a possible change.</p></div><div class="trial-row"><div><b>Cadence trial</b><small>Type a real task in a private pop-up and review the saved aggregate.</small></div><button id="startTypingTrial" class="secondary-button" type="button">Start private trial <span>→</span></button></div><div class="trial-history" id="trialHistory"><span>No private trials saved on this device yet.</span></div><div class="checkin-picker" role="group" aria-label="Current study state"><button class="checkin selected" type="button" data-checkin="steady"><b>Steady</b><small>Working feels manageable</small></button><button class="checkin" type="button" data-checkin="stretched"><b>Stretched</b><small>Working feels effortful</small></button><button class="checkin" type="button" data-checkin="depleted"><b>Depleted</b><small>Recovery would help</small></button></div><div class="trainer-actions"><button id="saveCheckin" class="primary-button" type="button">Save private check-in</button><button id="trainLstm" class="secondary-button" type="button">Train local LSTM</button><button id="predictLstm" class="secondary-button" type="button">Check latest pattern</button><span id="trainerStatus" role="status" aria-live="polite">Collect 17+ check-ins to create 12 training sequences.</span></div><p class="trainer-footnote">The model reports pattern likelihood, never a diagnosis. Trial summaries, training and model storage remain on this device unless a student later opts into a separate research programme.</p></article>
+        </section>
+
+        <section id="community" class="page-section community-section" data-view="community">
+          <div class="section-title"><div><p class="eyebrow">ANONYMOUS STUDENT SPACE</p><h2>Practical reminders, not comparison.</h2></div><p class="section-lede">Share a small coping strategy without a name. Posts are community-facing, so never include names, contact details, locations or crisis details.</p></div>
+          <div class="community-grid">
+            <form class="community-compose panel" id="communityForm"><label for="communityTopic">Topic</label><select id="communityTopic"><option value="deadlines">Deadlines</option><option value="sleep">Sleep &amp; recovery</option><option value="meals">Meals &amp; energy</option><option value="boundaries">Boundaries</option><option value="asking_for_help">Asking for help</option></select><label for="communityText">A useful reminder for another student</label><textarea id="communityText" maxlength="500" placeholder="Example: I found that writing the smallest next step before a break made returning less overwhelming."></textarea><div class="community-compose-footer"><span id="communityCount">0 / 500</span><button class="primary-button" type="submit">Share anonymously <span>→</span></button></div><p class="reflection-status" id="communityStatus" role="status" aria-live="polite"></p></form>
+            <article class="community-feed panel"><div class="panel-heading"><div><p class="eyebrow">COMMUNITY BOARD</p><h3>Student-made coping notes</h3></div><button id="refreshCommunity" class="quiet-button" type="button">Refresh</button></div><div id="communityPosts" class="community-posts"><p class="data-empty">Sign in through the local API to load the community board.</p></div></article>
+          </div>
+          <p class="community-rule">Equilibrium is not a crisis service and cannot moderate in real time. If safety feels urgent, use the Support tab now.</p>
+        </section>
+
+        <section id="support" class="page-section support-section" data-view="support">
+          <div class="section-title"><div><p class="eyebrow">SUPPORT, YOUR WAY</p><h2>Choose the next kind step.</h2></div><p class="section-lede">Equilibrium offers choices, not automatic escalation. You decide if, when, and what to share with another person.</p></div>
+          <div class="support-grid">
+            <article class="support-feature"><p class="eyebrow">CHOOSE YOUR CAMPUS</p><span class="support-feature-icon">♡</span><h3>Reach the right person directly.</h3><p>Equilibrium does not book, disclose, or transmit your data. These official services open in a new tab or call directly from your device.</p><div class="campus-links"><a href="https://nus.edu.sg/uhc/health-promotion/mental-health/for-students" target="_blank" rel="noreferrer">NUS counselling</a><a href="https://www.ntu.edu.sg/life-at-ntu/student-life/campus-life-and-wellbeing/ntu-wellbeing/student-wellbeing-services" target="_blank" rel="noreferrer">NTU counselling</a><a href="https://studentwellness.smu.edu.sg/services/counselling-services" target="_blank" rel="noreferrer">SMU counselling</a></div></article>
+            <article class="peer-space panel"><p class="eyebrow">SINGAPORE, 24/7</p><h3>Need support right now?</h3><p>For immediate danger, call 995 or 999. For emotional support or thoughts of suicide, SOS is available 24 hours.</p><div class="urgent-actions"><a class="primary-button" href="tel:1767">Call SOS 1767</a><a class="secondary-button" href="https://wa.me/6591511767" target="_blank" rel="noreferrer">WhatsApp SOS CareText</a><a class="text-button" href="https://www.mindline.sg/" target="_blank" rel="noreferrer">Visit national mindline</a></div></article>
+          </div>
+          <div class="support-actions"><article><span>⌑</span><div><b>Share a summary - only if you choose.</b><p>Prepare a plain-language conversation starter; you preview it before you copy it.</p></div><button id="shareSummaryButton" type="button">Create private summary <span>→</span></button></article><article><span>!</span><div><b>It feels urgent?</b><p>Move past the app and call emergency services or SOS now. Do not wait for an app response.</p></div><a class="urgent-link" href="tel:1767">Call 1767</a></article></div>
+        </section>
+        <footer><span>Equilibrium · a private capacity companion</span><span>Built around your agency, not your anxiety.</span></footer>
+      </main>
+    </div>
+
+    <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
+      <section class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><button class="modal-close" id="modalClose" type="button" aria-label="Close">×</button><div id="modalContent"></div></section>
+    </div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="vendor/tf.min.js"></script>
+    <script src="baseline-model.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
